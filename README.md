@@ -1,41 +1,43 @@
-# Cursor Trial Plugins
+# Plugins Cursor F360
 
-An example Team Marketplace that includes a set of starter plugins for Cursor.
+Marketplace de plugins do Cursor mantido pela F360, com skills, regras e agentes para fluxos de desenvolvimento e documentação.
 
-## Included plugins
+## Plugins incluídos
 
-This repo currently ships five grouped plugins:
+- **git-workflows** — Fluxos de Git para commits, PRs, CI e resolução de conflitos de merge
+- **documentation** — Skills e agente para documentação: README, revisões semanais e convenções em Markdown
+- **f360-libs-csharp** — Skills para o repositório f360-libs-csharp
+- **f360-financas** — Skills, Rules e Agents para o repositório f360-financas
+- **f360-jira** — Skills para interação com o Jira da F360
 
-- **git-workflows**: commit, PR, CI, merge conflict, and branch validation workflows
-- **documentation**: README updates, weekly review summaries, markdown naming, and docs writing
-- **pm**: Ticket-oriented PM workflows with MCP config, ticket writing, and board summarization
-- **design**: wireframes, component design support, and mockup workflow
-- **testing-reliability**: Datadog dashboards, performance optimization, and testing agents
+## Estrutura do repositório
 
-## Repository structure
+- `.cursor-plugin/marketplace.json` — manifesto do marketplace e registro dos plugins
+- `plugins/<nome-do-plugin>/.cursor-plugin/plugin.json` — metadados de cada plugin
+- `plugins/<nome-do-plugin>/rules` — arquivos de regras (`.mdc`)
+- `plugins/<nome-do-plugin>/skills` — pastas de skills com `SKILL.md`
+- `plugins/<nome-do-plugin>/agents` — definições de subagentes
+- `plugins/<nome-do-plugin>/mcp.json` — configuração de servidores MCP por plugin
 
-- `.cursor-plugin/marketplace.json`: marketplace manifest and plugin registry
-- `plugins/<plugin-name>/.cursor-plugin/plugin.json`: per-plugin metadata
-- `plugins/<plugin-name>/rules`: rule files (`.mdc`)
-- `plugins/<plugin-name>/skills`: skill folders with `SKILL.md`
-- `plugins/<plugin-name>/agents`: subagent definitions
-- `plugins/<plugin-name>/mcp.json`: MCP server configuration for each plugin
+## Como contribuir
 
-## Validate changes
+1. Crie ou edite recursos (plugins, skills, rules, agents) dentro da estrutura descrita acima.
+2. **Antes de enviar um novo recurso ou alteração**, execute o script de validação:
 
-Run:
+   ```bash
+   node scripts/validate-template.mjs
+   ```
 
-```bash
-node scripts/validate-template.mjs
-```
+   Esse script verifica:
+   - caminhos e entradas do marketplace
+   - manifestos dos plugins (`.cursor-plugin/plugin.json`)
+   - frontmatter obrigatório em arquivos de regras, skills, agents e commands
 
-This checks marketplace paths, plugin manifests, and required frontmatter in rule/skill/agent/command files.
+   A contribuição só deve ser subida se a validação passar sem erros.
 
-## Submission checklist
-
-- Each plugin has a valid `.cursor-plugin/plugin.json`
-- Plugin names are unique, lowercase, and kebab-case
-- `.cursor-plugin/marketplace.json` entries map to real plugin folders
-- Required frontmatter metadata exists in plugin content files
-- Logo paths resolve correctly from each plugin manifest
-- `node scripts/validate-template.mjs` passes
+3. Garanta que:
+   - cada plugin tenha um `plugin.json` válido em `.cursor-plugin/`
+   - os nomes dos plugins sejam únicos, em minúsculas e no formato kebab-case
+   - as entradas em `.cursor-plugin/marketplace.json` apontem para pastas de plugins existentes
+   - os arquivos de conteúdo dos plugins tenham os metadados de frontmatter exigidos
+   - os caminhos de logo nos manifestos resolvam corretamente para cada plugin
