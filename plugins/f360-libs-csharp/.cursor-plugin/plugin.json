@@ -1,6 +1,6 @@
 {
     "name": "f360-libs-csharp",
-    "displayName": "F360 Libs Skills",
+    "displayName": "F360 - Libs C#",
     "version": "0.0.1",
     "description": "Skills para o repositório f360-libs-csharp",
     "author": {
@@ -9,6 +9,6 @@
     },
     "license": "MIT",
     "keywords": ["cursor", "plugin", "f360", "libs", "csharp"],
-    "logo": "assets/f360.png"
+    "logo": "assets/f360-icon.png"
   }
   

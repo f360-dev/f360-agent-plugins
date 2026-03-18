@@ -1,6 +1,6 @@
 {
   "name": "documentation",
-  "displayName": "Documentation",
+  "displayName": "F360 - Documentation",
   "version": "0.1.0",
   "description": "Documentation-focused skills and agent for README, weekly reviews, and markdown conventions.",
   "author": {
@@ -9,5 +9,5 @@
   },
   "license": "MIT",
   "keywords": ["cursor", "plugin", "docs", "readme", "markdown"],
-  "logo": "assets/documentation.png"
+  "logo": "assets/f360-icon.png"
 }
