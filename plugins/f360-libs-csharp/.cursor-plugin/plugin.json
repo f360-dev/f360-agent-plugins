@@ -1,0 +1,14 @@
+{
+    "name": "f360-libs-csharp",
+    "displayName": "F360 Libs Skills",
+    "version": "0.0.1",
+    "description": "Skills para o repositório f360-libs-csharp",
+    "author": {
+      "name": "F360",
+      "email": "dev@f360.com.br"
+    },
+    "license": "MIT",
+    "keywords": ["cursor", "plugin", "f360", "libs", "csharp"],
+    "logo": "assets/design.png"
+  }
+  

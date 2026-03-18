@@ -1,12 +1,12 @@
 {
-  "name": "cursor-trial-plugins",
+  "name": "f360-cursor-plugins",
   "owner": {
-    "name": "Cursor Team",
-    "email": "hi@cursor.com"
+    "name": "F360 Team",
+    "email": "dev@f360.com.br"
   },
   "metadata": {
-    "description": "A set of starter plugins for your Cursor trial.",
-    "version": "0.1.0",
+    "description": "Plugins para o cursor da F360",
+    "version": "0.0.1",
     "pluginRoot": "plugins"
   },
   "plugins": [
@@ -44,6 +44,11 @@
       "name": "featureflag-migration",
       "source": "featureflag-migration",
       "description": "Migrate legacy feature flag systems to OpenFeature with inventory, migration, verification, cleanup, and scaffolding"
+    },
+    {
+      "name": "f360-libs-csharp",
+      "source": "f360-libs-csharp",
+      "description": "Skills para o repositório f360-libs-csharp"
     }
   ]
 }
