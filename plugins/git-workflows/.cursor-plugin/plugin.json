@@ -1,11 +1,11 @@
 {
   "name": "git-workflows",
   "displayName": "Git Workflows",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Common git workflow skills for commits, PRs, CI, and merge conflict handling.",
   "author": {
-    "name": "Cursor Team",
-    "email": "hi@cursor.com"
+    "name": "F360 Team",
+    "email": "dev@f360.com.br"
   },
   "license": "MIT",
   "keywords": ["cursor", "plugin", "git", "github", "ci", "pr"],

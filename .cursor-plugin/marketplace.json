@@ -24,6 +24,16 @@
       "name": "f360-libs-csharp",
       "source": "f360-libs-csharp",
       "description": "Skills para o repositório f360-libs-csharp"
+    },
+    {
+      "name": "f360-financas",
+      "source": "f360-financas",
+      "description": "Skills, Rules e Agents para o repositório f360-financas"
+    },
+    {
+      "name": "f360-jira",
+      "source": "f360-jira",
+      "description": "Skills para interação com o Jira da F360"
     }
   ]
 }

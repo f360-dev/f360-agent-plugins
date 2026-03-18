@@ -1,0 +1,14 @@
+---
+alwaysApply: false
+description: Configuration for jira-assistant skills. Use only when using jira-assistant skill.
+---
+
+# Jira Project Configuration
+
+This workspace uses the following Jira configuration:
+
+- **Project Key:** FINC
+- **Cloud ID:** a96275a6-dbaa-4923-a0cf-e3581d0a7f11
+- **URL:** https://f360.atlassian.net/
+- **Project Name:** F360 FinCore
+- **Board URL:** https://f360.atlassian.net/jira/software/c/projects/FINC/boards/214
