@@ -9,6 +9,7 @@ Marketplace de plugins do Cursor mantido pela F360, com skills, regras e agentes
 - **f360-libs-csharp** — Skills para o repositório f360-libs-csharp
 - **f360-financas** — Skills, Rules e Agents para o repositório f360-financas
 - **f360-jira** — Skills para interação com o Jira da F360
+- **f360-code-review** — Skills e Agents para solicitar e conduzir code reviews no fluxo de desenvolvimento
 
 ## Estrutura do repositório
 

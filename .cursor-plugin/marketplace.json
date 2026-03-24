@@ -34,6 +34,11 @@
       "name": "f360-jira",
       "source": "f360-jira",
       "description": "Skills para interação com o Jira da F360"
+    },
+    {
+      "name": "f360-code-review",
+      "source": "f360-code-review",
+      "description": "Skills, Rules e Agents para uso de code reviews"
     }
   ]
 }
