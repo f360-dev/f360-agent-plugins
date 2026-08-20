@@ -26,6 +26,102 @@ Marketplace de plugins de agentes da F360 mantido para uso em Cursor, Codex e Cl
 - `plugins/<nome-do-plugin>/.mcp.json` - configuracao de servidores MCP, quando o plugin usar MCP
 - `plugins/<nome-do-plugin>/assets` - logos e imagens referenciadas pelos manifestos
 
+## Como instalar
+
+Instale o marketplace diretamente pela URL Git do repositorio:
+
+```text
+https://github.com/f360-dev/f360-agent-plugins.git
+```
+
+Use essa URL no fluxo de instalacao/importacao de marketplace do cliente escolhido. Depois selecione o plugin pelo nome registrado no marketplace, por exemplo `f360-jira` ou `git-workflows`.
+
+### Codex
+
+Pela linha de comando, instale o marketplace com:
+
+```bash
+codex plugin marketplace add https://github.com/f360-dev/f360-agent-plugins.git
+```
+
+Tambem e possivel usar o formato `owner/repo`:
+
+```bash
+codex plugin marketplace add f360-dev/f360-agent-plugins
+```
+
+Para instalar a partir de uma branch, tag ou commit especifico:
+
+```bash
+codex plugin marketplace add f360-dev/f360-agent-plugins --ref main
+```
+
+Para atualizar o marketplace ja instalado:
+
+```bash
+codex plugin marketplace upgrade f360-agent-plugins
+```
+
+Para atualizar todos os marketplaces configurados:
+
+```bash
+codex plugin marketplace upgrade
+```
+
+O Codex le o manifesto:
+
+```text
+.agents/plugins/marketplace.json
+```
+
+Cada entrada aponta para uma pasta local em `./plugins/<nome-do-plugin>` e o Codex usa o manifesto:
+
+```text
+plugins/<nome-do-plugin>/.codex-plugin/plugin.json
+```
+
+Para deixar o plugin disponivel como opcional, use `policy.installation` como `AVAILABLE`. Para instalar por padrao no escopo configurado, use a politica de instalacao suportada pelo ambiente Codex. Quando a instalacao for local, escolha o escopo pelo destino: projeto para uso apenas naquele repositorio, ou usuario para uso em qualquer projeto.
+
+### Cursor
+
+No Cursor, adicione/importe o marketplace pela URL Git:
+
+```text
+https://github.com/f360-dev/f360-agent-plugins.git
+```
+
+O Cursor le o manifesto:
+
+```text
+.cursor-plugin/marketplace.json
+```
+
+Esse marketplace referencia os plugins dentro de `plugins/` usando `metadata.pluginRoot`.
+
+Quando precisar instalar uma skill ou regra apenas em um projeto, mantenha a instalacao/configuracao no workspace desse projeto. Quando quiser que fique disponivel para qualquer projeto do usuario, use a area global do Cursor do usuario.
+
+### Claude
+
+No Claude, adicione/importe o marketplace pela URL Git:
+
+```text
+https://github.com/f360-dev/f360-agent-plugins.git
+```
+
+O Claude le o manifesto:
+
+```text
+.claude-plugin/marketplace.json
+```
+
+Cada entrada aponta para uma pasta em `./plugins/<nome-do-plugin>` e o Claude usa o manifesto:
+
+```text
+plugins/<nome-do-plugin>/.claude-plugin/plugin.json
+```
+
+Para plugins com MCP, o manifesto deve apontar para `.mcp.json` pelo campo `mcpServers`. Se a instalacao for por projeto, mantenha o plugin ou a configuracao no projeto. Se for global, instale na area de usuario do Claude.
+
 ## Como contribuir
 
 Veja o passo a passo completo em [docs/add-a-plugin.md](docs/add-a-plugin.md).
