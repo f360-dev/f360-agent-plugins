@@ -11,12 +11,40 @@ const warnings = [];
 const pluginNamePattern = /^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/;
 const marketplaceNamePattern = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 
+const targets = [
+  {
+    id: "cursor",
+    label: "Cursor",
+    manifestDir: ".cursor-plugin",
+    marketplacePath: path.join(".cursor-plugin", "marketplace.json"),
+    requiresMarketplace: true,
+  },
+  {
+    id: "claude",
+    label: "Claude",
+    manifestDir: ".claude-plugin",
+    marketplacePath: path.join(".claude-plugin", "marketplace.json"),
+    requiresMarketplace: true,
+  },
+  {
+    id: "codex",
+    label: "Codex",
+    manifestDir: ".codex-plugin",
+    marketplacePath: path.join(".codex-plugin", "marketplace.json"),
+    requiresMarketplace: false,
+  },
+];
+
 function addError(message) {
   errors.push(message);
 }
 
 function addWarning(message) {
   warnings.push(message);
+}
+
+function isObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 async function pathExists(targetPath) {
@@ -114,6 +142,24 @@ async function walkFiles(dirPath) {
   return files;
 }
 
+async function listPluginDirectories() {
+  const pluginsDir = path.join(repoRoot, "plugins");
+  const exists = await ensureDirectory(pluginsDir, "Plugins root");
+  if (!exists) {
+    return [];
+  }
+
+  const entries = await fs.readdir(pluginsDir, { withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => ({
+      name: entry.name,
+      path: path.join(pluginsDir, entry.name),
+      relativePath: path.join("plugins", entry.name),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function isSafeRelativePath(value) {
   if (typeof value !== "string" || value.length === 0) {
     return false;
@@ -128,6 +174,10 @@ function isSafeRelativePath(value) {
   return !normalized.startsWith("../") && normalized !== "..";
 }
 
+function normalizeRelativePath(value) {
+  return path.posix.normalize(value.replace(/\\/g, "/").replace(/^\.\//, ""));
+}
+
 function extractPathValues(value) {
   if (typeof value === "string") {
     return [value];
@@ -137,7 +187,7 @@ function extractPathValues(value) {
     return value.flatMap((entry) => extractPathValues(entry));
   }
 
-  if (value && typeof value === "object") {
+  if (isObject(value)) {
     const candidates = [];
     if (typeof value.path === "string") {
       candidates.push(value.path);
@@ -151,14 +201,14 @@ function extractPathValues(value) {
   return [];
 }
 
-async function validateReferencedPath(pluginDir, fieldName, pathValue, pluginName) {
+async function validateReferencedPath(pluginDir, context, pathValue) {
   if (pathValue.startsWith("http://") || pathValue.startsWith("https://")) {
     return;
   }
 
   if (!isSafeRelativePath(pathValue)) {
     addError(
-      `${pluginName}: field "${fieldName}" has invalid path "${pathValue}". Use a relative path without ".." or absolute prefixes.`
+      `${context} has invalid path "${pathValue}". Use a relative path without ".." or absolute prefixes.`
     );
     return;
   }
@@ -166,7 +216,20 @@ async function validateReferencedPath(pluginDir, fieldName, pathValue, pluginNam
   const resolved = path.resolve(pluginDir, pathValue);
   const exists = await pathExists(resolved);
   if (!exists) {
-    addError(`${pluginName}: field "${fieldName}" references missing path "${pathValue}".`);
+    addError(`${context} references missing path "${pathValue}".`);
+  }
+}
+
+async function validatePathFields(pluginDir, pluginName, target, manifest, fields) {
+  for (const field of fields) {
+    const values = extractPathValues(manifest[field]);
+    for (const value of values) {
+      await validateReferencedPath(
+        pluginDir,
+        `${pluginName}: ${target.label} field "${field}"`,
+        value
+      );
+    }
   }
 }
 
@@ -240,119 +303,285 @@ function resolveMarketplaceSource(source, pluginRoot) {
     return source;
   }
   const normalizedRoot = pluginRoot.replace(/\\/g, "/").replace(/\/+$/, "");
-  const normalizedSource = source.replace(/\\/g, "/");
+  const normalizedSource = source.replace(/\\/g, "/").replace(/^\.\//, "");
   if (normalizedSource === normalizedRoot || normalizedSource.startsWith(`${normalizedRoot}/`)) {
     return normalizedSource;
   }
   return `${normalizedRoot}/${normalizedSource}`;
 }
 
-async function main() {
-  const marketplacePath = path.join(repoRoot, ".cursor-plugin", "marketplace.json");
-  const marketplace = await readJsonFile(marketplacePath, "Marketplace manifest");
+function requireString(value, context) {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    addError(`${context} is required and must be a non-empty string.`);
+    return false;
+  }
+  return true;
+}
+
+function validateMarketplaceEntryFields(entry, target, label) {
+  requireString(entry.description, `${target.label} marketplace ${label}.description`);
+
+  if (target.id === "claude") {
+    requireString(entry.version, `${target.label} marketplace ${label}.version`);
+    requireString(entry.category, `${target.label} marketplace ${label}.category`);
+    if (!isObject(entry.author)) {
+      addError(`${target.label} marketplace ${label}.author must contain a name.`);
+    } else {
+      requireString(entry.author.name, `${target.label} marketplace ${label}.author.name`);
+    }
+  }
+}
+
+async function validateMarketplace(target) {
+  const marketplacePath = path.join(repoRoot, target.marketplacePath);
+
+  if (!(await pathExists(marketplacePath))) {
+    if (target.requiresMarketplace) {
+      addError(`${target.label} marketplace manifest is missing: ${marketplacePath}`);
+    }
+    return new Map();
+  }
+
+  const marketplace = await readJsonFile(marketplacePath, `${target.label} marketplace manifest`);
   if (!marketplace) {
-    summarizeAndExit();
-    return;
+    return new Map();
   }
 
   if (typeof marketplace.name !== "string" || !marketplaceNamePattern.test(marketplace.name)) {
     addError(
-      'Marketplace "name" must be lowercase kebab-case and start/end with an alphanumeric character.'
+      `${target.label} marketplace "name" must be lowercase kebab-case and start/end with an alphanumeric character.`
     );
   }
 
-  if (!marketplace.owner || typeof marketplace.owner.name !== "string" || marketplace.owner.name.length === 0) {
-    addError('Marketplace "owner.name" is required.');
+  if (!isObject(marketplace.owner) || !requireString(marketplace.owner.name, `${target.label} marketplace owner.name`)) {
+    addError(`${target.label} marketplace "owner" must contain a name.`);
   }
 
   if (!Array.isArray(marketplace.plugins) || marketplace.plugins.length === 0) {
-    addError('Marketplace "plugins" must be a non-empty array.');
-    summarizeAndExit();
-    return;
+    addError(`${target.label} marketplace "plugins" must be a non-empty array.`);
+    return new Map();
   }
 
   const pluginRoot = marketplace.metadata?.pluginRoot;
   if (pluginRoot !== undefined) {
     if (typeof pluginRoot !== "string" || !isSafeRelativePath(pluginRoot)) {
-      addError('Marketplace "metadata.pluginRoot" must be a safe relative path.');
+      addError(`${target.label} marketplace "metadata.pluginRoot" must be a safe relative path.`);
     } else {
       const pluginRootAbs = path.join(repoRoot, pluginRoot);
-      await ensureDirectory(pluginRootAbs, 'Marketplace "metadata.pluginRoot"');
+      await ensureDirectory(pluginRootAbs, `${target.label} marketplace "metadata.pluginRoot"`);
     }
   }
 
   const seenNames = new Set();
+  const entriesByName = new Map();
+
   for (const [index, entry] of marketplace.plugins.entries()) {
     const label = `plugins[${index}]`;
 
-    if (!entry || typeof entry !== "object") {
-      addError(`${label} must be an object.`);
+    if (!isObject(entry)) {
+      addError(`${target.label} marketplace ${label} must be an object.`);
       continue;
     }
 
     if (typeof entry.name !== "string" || !pluginNamePattern.test(entry.name)) {
-      addError(`${label}.name must be lowercase and use only alphanumerics, hyphens, and periods.`);
+      addError(
+        `${target.label} marketplace ${label}.name must be lowercase and use only alphanumerics, hyphens, and periods.`
+      );
       continue;
     }
 
     if (seenNames.has(entry.name)) {
-      addError(`Duplicate plugin name in marketplace manifest: "${entry.name}"`);
+      addError(`Duplicate plugin name in ${target.label} marketplace manifest: "${entry.name}"`);
     }
     seenNames.add(entry.name);
+    validateMarketplaceEntryFields(entry, target, label);
 
     const sourcePath = resolveMarketplaceSource(entry.source, pluginRoot ?? "");
     if (!sourcePath) {
-      addError(`${label}.source must be a string path.`);
+      addError(`${target.label} marketplace ${label}.source must be a string path.`);
       continue;
     }
     if (!isSafeRelativePath(sourcePath)) {
-      addError(`${label}.source is not a safe relative path: "${sourcePath}"`);
+      addError(`${target.label} marketplace ${label}.source is not a safe relative path: "${sourcePath}"`);
       continue;
     }
 
     const pluginDir = path.join(repoRoot, sourcePath);
-    const pluginDirExists = await ensureDirectory(pluginDir, `${label}.source`);
+    const pluginDirExists = await ensureDirectory(pluginDir, `${target.label} marketplace ${label}.source`);
     if (!pluginDirExists) {
       continue;
     }
 
-    const manifestPath = path.join(pluginDir, ".cursor-plugin", "plugin.json");
-    const pluginManifest = await readJsonFile(manifestPath, `${entry.name} plugin manifest`);
-    if (!pluginManifest) {
-      continue;
-    }
+    entriesByName.set(entry.name, {
+      sourcePath: normalizeRelativePath(sourcePath),
+      entry,
+    });
+  }
 
-    if (typeof pluginManifest.name !== "string" || !pluginNamePattern.test(pluginManifest.name)) {
-      addError(
-        `${entry.name}: "name" in plugin.json must be lowercase and use only alphanumerics, hyphens, and periods.`
-      );
-    }
+  return entriesByName;
+}
 
-    if (pluginManifest.name && pluginManifest.name !== entry.name) {
-      addError(
-        `${entry.name}: marketplace entry name does not match plugin.json name ("${pluginManifest.name}").`
-      );
-    }
+function validateCommonPluginManifest(manifest, pluginName, target) {
+  if (typeof manifest.name !== "string" || !pluginNamePattern.test(manifest.name)) {
+    addError(
+      `${pluginName}: ${target.label} plugin.json "name" must be lowercase and use only alphanumerics, hyphens, and periods.`
+    );
+  } else if (manifest.name !== pluginName) {
+    addError(`${pluginName}: ${target.label} plugin.json name does not match plugin folder name ("${manifest.name}").`);
+  }
 
-    const manifestFields = ["logo", "rules", "skills", "agents", "commands", "hooks", "mcpServers"];
-    for (const field of manifestFields) {
-      const values = extractPathValues(pluginManifest[field]);
-      for (const value of values) {
-        await validateReferencedPath(pluginDir, field, value, entry.name);
+  requireString(manifest.version, `${pluginName}: ${target.label} plugin.json version`);
+  requireString(manifest.description, `${pluginName}: ${target.label} plugin.json description`);
+
+  if (!isObject(manifest.author)) {
+    addError(`${pluginName}: ${target.label} plugin.json author must contain a name.`);
+  } else {
+    requireString(manifest.author.name, `${pluginName}: ${target.label} plugin.json author.name`);
+  }
+}
+
+async function validateCursorManifest(pluginDir, pluginName, target, manifest) {
+  requireString(manifest.displayName, `${pluginName}: Cursor plugin.json displayName`);
+  await validatePathFields(pluginDir, pluginName, target, manifest, [
+    "logo",
+    "rules",
+    "skills",
+    "agents",
+    "commands",
+    "hooks",
+    "mcpServers",
+  ]);
+}
+
+async function validateClaudeManifest(pluginDir, pluginName, target, manifest) {
+  requireString(manifest.displayName, `${pluginName}: Claude plugin.json displayName`);
+  await validatePathFields(pluginDir, pluginName, target, manifest, [
+    "logo",
+    "rules",
+    "skills",
+    "agents",
+    "commands",
+    "hooks",
+    "mcpServers",
+  ]);
+}
+
+async function validateCodexManifest(pluginDir, pluginName, target, manifest) {
+  if (!isObject(manifest.interface)) {
+    addError(`${pluginName}: Codex plugin.json interface object is required.`);
+  } else {
+    requireString(manifest.interface.displayName, `${pluginName}: Codex plugin.json interface.displayName`);
+    requireString(manifest.interface.shortDescription, `${pluginName}: Codex plugin.json interface.shortDescription`);
+    requireString(manifest.interface.developerName, `${pluginName}: Codex plugin.json interface.developerName`);
+    requireString(manifest.interface.category, `${pluginName}: Codex plugin.json interface.category`);
+
+    if (!Array.isArray(manifest.interface.capabilities) || manifest.interface.capabilities.length === 0) {
+      addError(`${pluginName}: Codex plugin.json interface.capabilities must be a non-empty array.`);
+    } else {
+      for (const [index, capability] of manifest.interface.capabilities.entries()) {
+        requireString(capability, `${pluginName}: Codex plugin.json interface.capabilities[${index}]`);
       }
     }
 
-    await validateComponentFrontmatter(pluginDir, entry.name);
+    for (const field of ["logo", "composerIcon"]) {
+      const value = manifest.interface[field];
+      if (!requireString(value, `${pluginName}: Codex plugin.json interface.${field}`)) {
+        continue;
+      }
+      await validateReferencedPath(pluginDir, `${pluginName}: Codex field "interface.${field}"`, value);
+    }
+  }
 
-    const hooksPath = path.join(pluginDir, "hooks", "hooks.json");
-    if (!(await pathExists(hooksPath))) {
-      addWarning(`${entry.name}: no hooks/hooks.json file found (only needed when using hooks).`);
+  await validatePathFields(pluginDir, pluginName, target, manifest, [
+    "logo",
+    "rules",
+    "skills",
+    "agents",
+    "commands",
+    "hooks",
+    "mcpServers",
+  ]);
+}
+
+async function validatePluginManifest(pluginDir, pluginName, target) {
+  const manifestPath = path.join(pluginDir, target.manifestDir, "plugin.json");
+  const manifest = await readJsonFile(manifestPath, `${pluginName} ${target.label} plugin manifest`);
+  if (!manifest) {
+    return;
+  }
+
+  validateCommonPluginManifest(manifest, pluginName, target);
+
+  if (target.id === "cursor") {
+    await validateCursorManifest(pluginDir, pluginName, target, manifest);
+  } else if (target.id === "claude") {
+    await validateClaudeManifest(pluginDir, pluginName, target, manifest);
+  } else if (target.id === "codex") {
+    await validateCodexManifest(pluginDir, pluginName, target, manifest);
+  }
+}
+
+function validateMarketplaceCoverage(pluginDirs, marketplaceEntriesByTarget) {
+  for (const target of targets.filter((entry) => entry.requiresMarketplace)) {
+    const entries = marketplaceEntriesByTarget.get(target.id) ?? new Map();
+
+    for (const pluginDir of pluginDirs) {
+      const marketplaceEntry = entries.get(pluginDir.name);
+      if (!marketplaceEntry) {
+        addError(`${target.label} marketplace is missing plugin "${pluginDir.name}".`);
+        continue;
+      }
+
+      const expectedSource = normalizeRelativePath(pluginDir.relativePath);
+      if (marketplaceEntry.sourcePath !== expectedSource) {
+        addError(
+          `${target.label} marketplace plugin "${pluginDir.name}" source should resolve to "${expectedSource}", got "${marketplaceEntry.sourcePath}".`
+        );
+      }
+    }
+  }
+}
+
+async function validateOptionalResourceWarnings(pluginDir, pluginName) {
+  const hooksPath = path.join(pluginDir, "hooks", "hooks.json");
+  if (!(await pathExists(hooksPath))) {
+    addWarning(`${pluginName}: no hooks/hooks.json file found (only needed when using hooks).`);
+  }
+
+  const mcpPath = path.join(pluginDir, "mcp.json");
+  const dotMcpPath = path.join(pluginDir, ".mcp.json");
+  if (!(await pathExists(mcpPath)) && !(await pathExists(dotMcpPath))) {
+    addWarning(`${pluginName}: no mcp.json or .mcp.json file found (only needed when using MCP servers).`);
+  }
+}
+
+async function main() {
+  const pluginDirs = await listPluginDirectories();
+  if (pluginDirs.length === 0) {
+    addError("No plugin directories found under plugins/.");
+    summarizeAndExit();
+    return;
+  }
+
+  const marketplaceEntriesByTarget = new Map();
+  for (const target of targets) {
+    marketplaceEntriesByTarget.set(target.id, await validateMarketplace(target));
+  }
+
+  validateMarketplaceCoverage(pluginDirs, marketplaceEntriesByTarget);
+
+  for (const pluginDir of pluginDirs) {
+    if (!pluginNamePattern.test(pluginDir.name)) {
+      addError(`${pluginDir.name}: plugin folder name must be lowercase and use only alphanumerics, hyphens, and periods.`);
+      continue;
     }
 
-    const mcpPath = path.join(pluginDir, "mcp.json");
-    if (!(await pathExists(mcpPath))) {
-      addWarning(`${entry.name}: no mcp.json file found (only needed when using MCP servers).`);
+    for (const target of targets) {
+      await validatePluginManifest(pluginDir.path, pluginDir.name, target);
     }
+
+    await validateComponentFrontmatter(pluginDir.path, pluginDir.name);
+    await validateOptionalResourceWarnings(pluginDir.path, pluginDir.name);
   }
 
   summarizeAndExit();

@@ -1,0 +1,32 @@
+{
+    "name":  "git-workflows",
+    "version":  "0.0.1",
+    "description":  "Common git workflow skills for commits, PRs, CI, and merge conflict handling.",
+    "author":  {
+                   "name":  "F360 Team",
+                   "email":  "dev@f360.com.br"
+               },
+    "license":  "MIT",
+    "keywords":  [
+                     "cursor",
+                     "plugin",
+                     "git",
+                     "github",
+                     "ci",
+                     "pr",
+                     "codex",
+                     "claude"
+                 ],
+    "skills":  "./skills/",
+    "interface":  {
+                      "displayName":  "F360 - Git Workflows",
+                      "shortDescription":  "Common git workflow skills for commits, PRs, CI, and merge conflict handling.",
+                      "developerName":  "F360 Team",
+                      "category":  "Productivity",
+                      "capabilities":  [
+                                           "Workflow"
+                                       ],
+                      "logo":  "./assets/git.png",
+                      "composerIcon":  "./assets/git.png"
+                  }
+}

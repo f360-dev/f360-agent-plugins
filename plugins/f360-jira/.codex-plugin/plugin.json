@@ -1,0 +1,31 @@
+{
+    "name": "f360-jira",
+    "version": "0.0.1",
+    "description": "Skills para interação com o Jira da F360",
+    "author": {
+        "name": "F360",
+        "email": "dev@f360.com.br"
+    },
+    "license": "MIT",
+    "keywords": [
+        "cursor",
+        "plugin",
+        "f360",
+        "jira",
+        "codex",
+        "claude"
+    ],
+    "skills": "./skills/",
+    "interface": {
+        "displayName": "F360 - Jira",
+        "shortDescription": "Skills para interação com o Jira da F360",
+        "developerName": "F360",
+        "category": "Productivity",
+        "capabilities": [
+            "Workflow"
+        ],
+        "logo": "./assets/jira.png",
+        "composerIcon": "./assets/jira.png"
+    },
+    "mcpServers": "./.mcp.json"
+}

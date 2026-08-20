@@ -1,0 +1,80 @@
+{
+    "name": "f360-agent-plugins",
+    "interface": {
+        "displayName": "F360 Agent Plugins"
+    },
+    "plugins": [
+        {
+            "name": "git-workflows",
+            "source": {
+                "source": "local",
+                "path": "./plugins/git-workflows"
+            },
+            "policy": {
+                "installation": "AVAILABLE",
+                "authentication": "ON_INSTALL"
+            },
+            "category": "Productivity"
+        },
+        {
+            "name": "documentation",
+            "source": {
+                "source": "local",
+                "path": "./plugins/documentation"
+            },
+            "policy": {
+                "installation": "AVAILABLE",
+                "authentication": "ON_INSTALL"
+            },
+            "category": "Productivity"
+        },
+        {
+            "name": "f360-libs-csharp",
+            "source": {
+                "source": "local",
+                "path": "./plugins/f360-libs-csharp"
+            },
+            "policy": {
+                "installation": "AVAILABLE",
+                "authentication": "ON_INSTALL"
+            },
+            "category": "Productivity"
+        },
+        {
+            "name": "f360-financas",
+            "source": {
+                "source": "local",
+                "path": "./plugins/f360-financas"
+            },
+            "policy": {
+                "installation": "AVAILABLE",
+                "authentication": "ON_INSTALL"
+            },
+            "category": "Productivity"
+        },
+        {
+            "name": "f360-jira",
+            "source": {
+                "source": "local",
+                "path": "./plugins/f360-jira"
+            },
+            "policy": {
+                "installation": "AVAILABLE",
+                "authentication": "ON_INSTALL"
+            },
+            "category": "Productivity"
+        },
+        {
+            "name": "f360-code-review",
+            "source": {
+                "source": "local",
+                "path": "./plugins/f360-code-review"
+            },
+            "policy": {
+                "installation": "AVAILABLE",
+                "authentication": "ON_INSTALL"
+            },
+            "category": "Productivity"
+        }
+    ]
+}

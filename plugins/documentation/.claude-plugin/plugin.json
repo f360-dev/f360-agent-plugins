@@ -1,0 +1,24 @@
+{
+    "name": "documentation",
+    "displayName": "F360 - Documentation",
+    "version": "0.1.0",
+    "description": "Documentation-focused skills and agent for README, weekly reviews, and markdown conventions.",
+    "author": {
+        "name": "Cursor Team",
+        "email": "hi@cursor.com"
+    },
+    "license": "MIT",
+    "keywords": [
+        "cursor",
+        "plugin",
+        "docs",
+        "readme",
+        "markdown",
+        "codex",
+        "claude"
+    ],
+    "skills": "./skills/",
+    "agents": "./agents/",
+    "mcpServers": "./.mcp.json",
+    "logo": "assets/f360-icon.png"
+}

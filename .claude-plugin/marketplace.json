@@ -1,0 +1,77 @@
+{
+    "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+    "name": "f360-agent-plugins",
+    "description": "Plugins de agentes da F360 para fluxos de desenvolvimento, documentacao e produto.",
+    "owner": {
+        "name": "F360 Team",
+        "email": "dev@f360.com.br"
+    },
+    "plugins": [
+        {
+            "name": "git-workflows",
+            "source": "./plugins/git-workflows",
+            "description": "Common git workflow skills for commits, PRs, CI, and merge conflict handling.",
+            "version": "0.0.1",
+            "author": {
+                "name": "F360 Team",
+                "email": "dev@f360.com.br"
+            },
+            "category": "productivity"
+        },
+        {
+            "name": "documentation",
+            "source": "./plugins/documentation",
+            "description": "Documentation-focused skills and agent for README, weekly reviews, and markdown conventions.",
+            "version": "0.1.0",
+            "author": {
+                "name": "Cursor Team",
+                "email": "hi@cursor.com"
+            },
+            "category": "productivity"
+        },
+        {
+            "name": "f360-libs-csharp",
+            "source": "./plugins/f360-libs-csharp",
+            "description": "Skills para o repositório f360-libs-csharp",
+            "version": "0.0.1",
+            "author": {
+                "name": "F360",
+                "email": "dev@f360.com.br"
+            },
+            "category": "productivity"
+        },
+        {
+            "name": "f360-financas",
+            "source": "./plugins/f360-financas",
+            "description": "Skills, Rules e Agents para o repositório f360-financas",
+            "version": "0.0.1",
+            "author": {
+                "name": "F360",
+                "email": "dev@f360.com.br"
+            },
+            "category": "productivity"
+        },
+        {
+            "name": "f360-jira",
+            "source": "./plugins/f360-jira",
+            "description": "Skills para interação com o Jira da F360",
+            "version": "0.0.1",
+            "author": {
+                "name": "F360",
+                "email": "dev@f360.com.br"
+            },
+            "category": "productivity"
+        },
+        {
+            "name": "f360-code-review",
+            "source": "./plugins/f360-code-review",
+            "description": "Skills, Rules e Agents para uso de code reviews",
+            "version": "0.0.1",
+            "author": {
+                "name": "F360",
+                "email": "dev@f360.com.br"
+            },
+            "category": "productivity"
+        }
+    ]
+}

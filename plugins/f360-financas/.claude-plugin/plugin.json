@@ -1,0 +1,21 @@
+{
+    "name": "f360-financas",
+    "displayName": "F360 Finanças",
+    "version": "0.0.1",
+    "description": "Skills, Rules e Agents para o repositório f360-financas",
+    "author": {
+        "name": "F360",
+        "email": "dev@f360.com.br"
+    },
+    "license": "MIT",
+    "keywords": [
+        "cursor",
+        "plugin",
+        "f360",
+        "financas",
+        "codex",
+        "claude"
+    ],
+    "skills": "./skills/",
+    "logo": "assets/f360-icon.png"
+}

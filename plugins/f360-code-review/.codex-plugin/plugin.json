@@ -1,0 +1,31 @@
+{
+    "name": "f360-code-review",
+    "version": "0.0.1",
+    "description": "Skills, Rules e Agents para uso de code reviews",
+    "author": {
+        "name": "F360",
+        "email": "dev@f360.com.br"
+    },
+    "license": "MIT",
+    "keywords": [
+        "cursor",
+        "plugin",
+        "f360",
+        "code",
+        "review",
+        "codex",
+        "claude"
+    ],
+    "skills": "./skills/",
+    "interface": {
+        "displayName": "F360 Code Review",
+        "shortDescription": "Skills, Rules e Agents para uso de code reviews",
+        "developerName": "F360",
+        "category": "Productivity",
+        "capabilities": [
+            "Workflow"
+        ],
+        "logo": "./assets/f360-icon.png",
+        "composerIcon": "./assets/f360-icon.png"
+    }
+}
