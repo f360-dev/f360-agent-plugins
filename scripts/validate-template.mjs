@@ -30,8 +30,8 @@ const targets = [
     id: "codex",
     label: "Codex",
     manifestDir: ".codex-plugin",
-    marketplacePath: path.join(".codex-plugin", "marketplace.json"),
-    requiresMarketplace: false,
+    marketplacePath: path.join(".agents", "plugins", "marketplace.json"),
+    requiresMarketplace: true,
   },
 ];
 
@@ -295,10 +295,28 @@ async function validateComponentFrontmatter(pluginDir, pluginName) {
   }
 }
 
-function resolveMarketplaceSource(source, pluginRoot) {
-  if (typeof source !== "string" || source.length === 0) {
+function resolveMarketplaceSourceValue(entry, target) {
+  if (target.id === "codex" && isObject(entry.source)) {
+    if (entry.source.source !== "local") {
+      addError(`${target.label} marketplace entry "${entry.name}" source.source must be "local".`);
+      return null;
+    }
+    if (typeof entry.source.path !== "string" || entry.source.path.length === 0) {
+      addError(`${target.label} marketplace entry "${entry.name}" source.path must be a string path.`);
+      return null;
+    }
+    return entry.source.path;
+  }
+
+  if (typeof entry.source !== "string" || entry.source.length === 0) {
+    addError(`${target.label} marketplace entry "${entry.name}" source must be a string path.`);
     return null;
   }
+
+  return entry.source;
+}
+
+function resolveMarketplaceSource(source, pluginRoot) {
   if (!pluginRoot) {
     return source;
   }
@@ -319,7 +337,9 @@ function requireString(value, context) {
 }
 
 function validateMarketplaceEntryFields(entry, target, label) {
-  requireString(entry.description, `${target.label} marketplace ${label}.description`);
+  if (target.id !== "codex") {
+    requireString(entry.description, `${target.label} marketplace ${label}.description`);
+  }
 
   if (target.id === "claude") {
     requireString(entry.version, `${target.label} marketplace ${label}.version`);
@@ -328,6 +348,14 @@ function validateMarketplaceEntryFields(entry, target, label) {
       addError(`${target.label} marketplace ${label}.author must contain a name.`);
     } else {
       requireString(entry.author.name, `${target.label} marketplace ${label}.author.name`);
+    }
+  } else if (target.id === "codex") {
+    requireString(entry.category, `${target.label} marketplace ${label}.category`);
+    if (!isObject(entry.policy)) {
+      addError(`${target.label} marketplace ${label}.policy must contain installation and authentication.`);
+    } else {
+      requireString(entry.policy.installation, `${target.label} marketplace ${label}.policy.installation`);
+      requireString(entry.policy.authentication, `${target.label} marketplace ${label}.policy.authentication`);
     }
   }
 }
@@ -353,7 +381,10 @@ async function validateMarketplace(target) {
     );
   }
 
-  if (!isObject(marketplace.owner) || !requireString(marketplace.owner.name, `${target.label} marketplace owner.name`)) {
+  if (
+    target.id !== "codex" &&
+    (!isObject(marketplace.owner) || !requireString(marketplace.owner.name, `${target.label} marketplace owner.name`))
+  ) {
     addError(`${target.label} marketplace "owner" must contain a name.`);
   }
 
@@ -396,9 +427,14 @@ async function validateMarketplace(target) {
     seenNames.add(entry.name);
     validateMarketplaceEntryFields(entry, target, label);
 
-    const sourcePath = resolveMarketplaceSource(entry.source, pluginRoot ?? "");
+    const sourceValue = resolveMarketplaceSourceValue(entry, target);
+    if (!sourceValue) {
+      continue;
+    }
+
+    const sourcePath = resolveMarketplaceSource(sourceValue, pluginRoot ?? "");
     if (!sourcePath) {
-      addError(`${target.label} marketplace ${label}.source must be a string path.`);
+      addError(`${target.label} marketplace ${label}.source must resolve to a path.`);
       continue;
     }
     if (!isSafeRelativePath(sourcePath)) {
