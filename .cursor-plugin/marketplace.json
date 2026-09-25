@@ -39,6 +39,11 @@
       "name": "f360-code-review",
       "source": "f360-code-review",
       "description": "Skills, Rules e Agents para uso de code reviews"
+    },
+    {
+      "name": "f360-new-horizons",
+      "source": "f360-new-horizons",
+      "description": "Skills, Rules e Agents para o repositório f360-new-horizons"
     }
   ]
 }

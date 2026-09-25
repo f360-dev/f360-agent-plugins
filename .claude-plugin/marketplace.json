@@ -72,6 +72,17 @@
                 "email": "dev@f360.com.br"
             },
             "category": "productivity"
+        },
+        {
+            "name": "f360-new-horizons",
+            "source": "./plugins/f360-new-horizons",
+            "description": "Skills, Rules e Agents para o repositório f360-new-horizons.",
+            "version": "0.1.0",
+            "author": {
+                "name": "F360",
+                "email": "dev@f360.com.br"
+            },
+            "category": "productivity"
         }
     ]
 }

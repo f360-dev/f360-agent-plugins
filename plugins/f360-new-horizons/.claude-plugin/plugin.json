@@ -1,0 +1,14 @@
+{
+  "name": "f360-new-horizons",
+  "displayName": "F360 New Horizons",
+  "version": "0.1.0",
+  "description": "Skills, Rules e Agents para o repositório f360-new-horizons",
+  "author": {
+    "name": "F360",
+    "email": "dev@f360.com.br"
+  },
+  "license": "MIT",
+  "keywords": [ "cursor", "codex", "claude", "plugin", "f360", "integracoes", "f360-new-horizons" ],
+  "skills": "./skills/",
+  "logo": "assets/f360-icon.png"
+}

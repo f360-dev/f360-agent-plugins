@@ -75,6 +75,18 @@
                 "authentication": "ON_INSTALL"
             },
             "category": "Productivity"
+        },
+        {
+            "name": "f360-new-horizons",
+            "source": {
+                "source": "local",
+                "path": "./plugins/f360-new-horizons"
+            },
+            "policy": {
+                "installation": "AVAILABLE",
+                "authentication": "ON_INSTALL"
+            },
+            "category": "Productivity"
         }
     ]
 }

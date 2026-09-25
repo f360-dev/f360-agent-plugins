@@ -10,6 +10,7 @@ Marketplace de plugins de agentes da F360 mantido para uso em Cursor, Codex e Cl
 - **f360-financas** - Skills, Rules e Agents para o repositorio f360-financas
 - **f360-jira** - Skills para interacao com o Jira da F360
 - **f360-code-review** - Skills e Agents para solicitar e conduzir code reviews no fluxo de desenvolvimento
+- **f360-new-horizons** - Skill para criar e atualizar a metadata do painel de integrações
 
 ## Estrutura do repositorio
 
