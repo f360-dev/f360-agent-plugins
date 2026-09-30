@@ -1,0 +1,21 @@
+{
+  "name": "f360-new-horizons",
+  "version": "0.1.0",
+  "description": "Skills, Rules e Agents para o repositório f360-new-horizons",
+  "author": {
+    "name": "F360",
+    "email": "dev@f360.com.br"
+  },
+  "license": "MIT",
+  "keywords": [ "cursor", "codex", "claude", "plugin", "f360", "integracoes", "f360-new-horizons" ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "F360 New Horizons",
+    "shortDescription": "Metadata do painel de integrações da F360",
+    "developerName": "F360",
+    "category": "Productivity",
+    "capabilities": [ "Workflow" ],
+    "logo": "./assets/f360-icon.png",
+    "composerIcon": "./assets/f360-icon.png"
+  }
+}
