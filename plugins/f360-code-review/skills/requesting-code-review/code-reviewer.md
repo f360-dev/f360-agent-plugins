@@ -1,146 +1,67 @@
-# Code Review Agent
+# Code Review Brief
 
-You are reviewing code changes for production readiness.
+Use this brief when invoking the plugin's `code-reviewer` agent, or as a checklist when reviewing directly. Replace every placeholder and pass the completed brief to the reviewer. This file is a template and is not loaded automatically with the skill.
 
-**Your task:**
-1. Review {WHAT_WAS_IMPLEMENTED}
-2. Compare against {PLAN_OR_REQUIREMENTS}
-3. Check code quality, architecture, testing
-4. Categorize issues by severity
-5. Assess production readiness
+## Review Request
 
-## What Was Implemented
+### What changed
 
 {DESCRIPTION}
 
-## Requirements/Plan
+### Implementation details
 
-{PLAN_REFERENCE}
+{WHAT_WAS_IMPLEMENTED}
 
-## Git Range to Review
+### Requirements or plan
 
-**Base:** {BASE_SHA}
-**Head:** {HEAD_SHA}
+{PLAN_OR_REQUIREMENTS}
 
-```bash
-git diff --stat {BASE_SHA}..{HEAD_SHA}
-git diff {BASE_SHA}..{HEAD_SHA}
-```
+If no written requirements or plan were provided, say so and assess correctness against the observable behavior and applicable project conventions. Do not invent requirements.
+
+### Change scope
+
+{CHANGE_SCOPE}
+
+### Git range
+
+- Base commit: `{BASE_SHA}`
+- Head commit: `{HEAD_SHA}`
+- Commit diff: `git diff --stat {BASE_SHA}..{HEAD_SHA}` and `git diff {BASE_SHA}..{HEAD_SHA}`
+
+If staged or unstaged tracked changes are included, inspect `git diff {BASE_SHA}` and `git diff --cached {BASE_SHA}` as applicable. Identify untracked files in scope and open them explicitly. Do not alter the worktree or review outside the stated scope.
 
 ## Review Checklist
 
-**Code Quality:**
-- Clean separation of concerns?
-- Proper error handling?
-- Type safety (if applicable)?
-- DRY principle followed?
-- Edge cases handled?
+- Does the change satisfy the stated requirements and preserve relevant existing behavior and contracts?
+- Are there concrete correctness, data integrity, security, error handling, or performance problems in the changed code?
+- Does it follow patterns and conventions used by this repository? Avoid generic style preferences unsupported by project conventions.
+- Are meaningful edge cases handled? Are tests appropriate for the behavior changed?
+- Are compatibility, migration, and documentation impacts addressed where applicable?
 
-**Architecture:**
-- Sound design decisions?
-- Scalability considerations?
-- Performance implications?
-- Security concerns?
-
-**Testing:**
-- Tests actually test logic (not mocks)?
-- Edge cases covered?
-- Integration tests where needed?
-- All tests passing?
-
-**Requirements:**
-- All plan requirements met?
-- Implementation matches spec?
-- No scope creep?
-- Breaking changes documented?
-
-**Production Readiness:**
-- Migration strategy (if schema changes)?
-- Backward compatibility considered?
-- Documentation complete?
-- No obvious bugs?
+Do not treat the use of mocks alone as evidence that a test does not exercise logic. Do not run tests unless requested or permitted by the active task instructions. Report tests as **passed**, **failed**, or **not run**, with the command and reason where known. Never claim validation that was not performed.
 
 ## Output Format
 
+### Findings
+
+List actionable findings in severity order. For each finding include:
+
+- Severity: **Critical**, **Important**, or **Minor**
+- File and line (or the closest precise location)
+- The concrete problem and when it occurs
+- Its impact
+- A suggested correction when clear
+
+Only report issues introduced by or materially affected by this change. If there are no findings, say so explicitly. Do not manufacture findings to fill a severity section.
+
 ### Strengths
-[What's well done? Be specific.]
 
-### Issues
+Mention specific positive choices when useful; do not let praise obscure findings.
 
-#### Critical (Must Fix)
-[Bugs, security issues, data loss risks, broken functionality]
+### Validation and limitations
 
-#### Important (Should Fix)
-[Architecture problems, missing features, poor error handling, test gaps]
-
-#### Minor (Nice to Have)
-[Code style, optimization opportunities, documentation improvements]
-
-**For each issue:**
-- File:line reference
-- What's wrong
-- Why it matters
-- How to fix (if not obvious)
-
-### Recommendations
-[Improvements for code quality, architecture, or process]
+List checks actually performed and their results. State tests or scope that were not reviewed, and why.
 
 ### Assessment
 
-**Ready to merge?** [Yes/No/With fixes]
-
-**Reasoning:** [Technical assessment in 1-2 sentences]
-
-## Critical Rules
-
-**DO:**
-- Categorize by actual severity (not everything is Critical)
-- Be specific (file:line, not vague)
-- Explain WHY issues matter
-- Acknowledge strengths
-- Give clear verdict
-
-**DON'T:**
-- Say "looks good" without checking
-- Mark nitpicks as Critical
-- Give feedback on code you didn't review
-- Be vague ("improve error handling")
-- Avoid giving a clear verdict
-
-## Example Output
-
-```
-### Strengths
-- Clean database schema with proper migrations (db.ts:15-42)
-- Comprehensive test coverage (18 tests, all edge cases)
-- Good error handling with fallbacks (summarizer.ts:85-92)
-
-### Issues
-
-#### Important
-1. **Missing help text in CLI wrapper**
-   - File: index-conversations:1-31
-   - Issue: No --help flag, users won't discover --concurrency
-   - Fix: Add --help case with usage examples
-
-2. **Date validation missing**
-   - File: search.ts:25-27
-   - Issue: Invalid dates silently return no results
-   - Fix: Validate ISO format, throw error with example
-
-#### Minor
-1. **Progress indicators**
-   - File: indexer.ts:130
-   - Issue: No "X of Y" counter for long operations
-   - Impact: Users don't know how long to wait
-
-### Recommendations
-- Add progress reporting for user experience
-- Consider config file for excluded projects (portability)
-
-### Assessment
-
-**Ready to merge: With fixes**
-
-**Reasoning:** Core implementation is solid with good architecture and tests. Important issues (help text, date validation) are easily fixed and don't affect core functionality.
-```
+State whether the reviewed change is **Ready**, **Ready with follow-up**, or **Needs fixes**, with a brief reason. The assessment is advisory and does not replace the owner's merge decision.
