@@ -1,7 +1,7 @@
 {
     "name": "f360-libs-csharp",
     "version": "0.0.1",
-    "description": "Skills para o repositório f360-libs-csharp",
+    "description": "Skills para o repositório f360-libs-csharp.",
     "author": {
         "name": "F360",
         "email": "dev@f360.com.br"
@@ -19,7 +19,8 @@
     "skills": "./skills/",
     "interface": {
         "displayName": "F360 - Libs C#",
-        "shortDescription": "Skills para o repositório f360-libs-csharp",
+        "shortDescription": "Integrações C# F360",
+        "longDescription": "Guias para desenvolver leitores de PDV e adquirentes e integrações de API no f360-libs-csharp, seguindo as estruturas, contratos e convenções do repositório.",
         "developerName": "F360",
         "category": "Productivity",
         "capabilities": [

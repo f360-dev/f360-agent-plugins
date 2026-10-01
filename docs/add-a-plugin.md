@@ -113,7 +113,8 @@ Exemplo de `plugins/meu-novo-plugin/.codex-plugin/plugin.json`:
   "skills": "./skills/",
   "interface": {
     "displayName": "Meu Novo Plugin",
-    "shortDescription": "Descreva o que este plugin faz.",
+    "shortDescription": "Fluxos de desenvolvimento",
+    "longDescription": "Fluxos práticos de desenvolvimento para equipes que usam o plugin, incluindo o objetivo e o escopo do que ele oferece.",
     "developerName": "F360",
     "category": "Productivity",
     "capabilities": ["Workflow"],
@@ -122,6 +123,8 @@ Exemplo de `plugins/meu-novo-plugin/.codex-plugin/plugin.json`:
   }
 }
 ```
+
+`shortDescription` é obrigatório, deve ficar em uma única linha e ter no máximo 30 caracteres. `longDescription` também é obrigatório e pode ter até 4.000 caracteres. Escreva a descrição longa explicando o que o plugin faz, para quem ele serve e quais são seus limites.
 
 Se o plugin usar MCP, adicione:
 

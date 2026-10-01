@@ -1,7 +1,7 @@
 {
     "name": "f360-code-review",
     "version": "0.0.1",
-    "description": "Skills, Rules e Agents para uso de code reviews",
+    "description": "Skills, regras e agentes para solicitar e conduzir revisões de código.",
     "author": {
         "name": "F360",
         "email": "dev@f360.com.br"
@@ -19,7 +19,8 @@
     "skills": "./skills/",
     "interface": {
         "displayName": "F360 Code Review",
-        "shortDescription": "Skills, Rules e Agents para uso de code reviews",
+        "shortDescription": "Revisões de código",
+        "longDescription": "Recursos para solicitar e conduzir revisões de código, com escopo Git claro, critérios de análise e formato consistente para os achados.",
         "developerName": "F360",
         "category": "Productivity",
         "capabilities": [

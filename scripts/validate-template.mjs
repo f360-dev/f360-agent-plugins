@@ -507,7 +507,20 @@ async function validateCodexManifest(pluginDir, pluginName, target, manifest) {
     addError(`${pluginName}: Codex plugin.json interface object is required.`);
   } else {
     requireString(manifest.interface.displayName, `${pluginName}: Codex plugin.json interface.displayName`);
-    requireString(manifest.interface.shortDescription, `${pluginName}: Codex plugin.json interface.shortDescription`);
+    const shortDescription = manifest.interface.shortDescription;
+    if (requireString(shortDescription, `${pluginName}: Codex plugin.json interface.shortDescription`)) {
+      if ([...shortDescription].length > 30) {
+        addError(`${pluginName}: Codex plugin.json interface.shortDescription must be 30 characters or fewer.`);
+      }
+      if (/[\r\n]/.test(shortDescription)) {
+        addError(`${pluginName}: Codex plugin.json interface.shortDescription must fit on one line.`);
+      }
+    }
+    const longDescription = manifest.interface.longDescription;
+    if (requireString(longDescription, `${pluginName}: Codex plugin.json interface.longDescription`)
+      && [...longDescription].length > 4000) {
+      addError(`${pluginName}: Codex plugin.json interface.longDescription must be 4,000 characters or fewer.`);
+    }
     requireString(manifest.interface.developerName, `${pluginName}: Codex plugin.json interface.developerName`);
     requireString(manifest.interface.category, `${pluginName}: Codex plugin.json interface.category`);
 

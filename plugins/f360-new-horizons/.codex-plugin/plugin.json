@@ -1,7 +1,7 @@
 {
   "name": "f360-new-horizons",
   "version": "0.1.0",
-  "description": "Skills, Rules e Agents para o repositório f360-new-horizons",
+    "description": "Skills, regras e agentes para o repositório f360-new-horizons.",
   "author": {
     "name": "F360",
     "email": "dev@f360.com.br"
@@ -11,7 +11,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "F360 New Horizons",
-    "shortDescription": "Metadata do painel de integrações da F360",
+    "shortDescription": "Apoio no desenvolvimento New Horizons",
+    "longDescription": "Orientações para os desenvolvedores no repositório do F360 New Horizons.",
     "developerName": "F360",
     "category": "Productivity",
     "capabilities": [ "Workflow" ],

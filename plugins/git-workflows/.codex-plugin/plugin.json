@@ -1,7 +1,7 @@
 {
     "name":  "git-workflows",
     "version":  "0.0.1",
-    "description":  "Common git workflow skills for commits, PRs, CI, and merge conflict handling.",
+    "description":  "Fluxos de trabalho comuns com Git para commits, pull requests, CI e resolução de conflitos de merge.",
     "author":  {
                    "name":  "F360 Team",
                    "email":  "dev@f360.com.br"
@@ -20,7 +20,8 @@
     "skills":  "./skills/",
     "interface":  {
                       "displayName":  "F360 - Git Workflows",
-                      "shortDescription":  "Common git workflow skills for commits, PRs, CI, and merge conflict handling.",
+                      "shortDescription":  "Fluxos de trabalho com Git",
+                      "longDescription":  "Orientações práticas de Git para commits, pull requests, integração contínua e resolução de conflitos de merge em repositórios de equipe.",
                       "developerName":  "F360 Team",
                       "category":  "Productivity",
                       "capabilities":  [

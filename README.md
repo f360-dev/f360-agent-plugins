@@ -150,7 +150,7 @@ Cada adicao deve continuar instalavel nos tres clientes:
 
 - **Cursor** usa `.cursor-plugin/marketplace.json` no repositorio e `plugins/<nome>/.cursor-plugin/plugin.json` por plugin. O manifesto deve ter `name`, `displayName`, `version`, `description`, `author.name` e caminhos validos para assets ou recursos declarados.
 - **Claude** usa `.claude-plugin/marketplace.json` no repositorio e `plugins/<nome>/.claude-plugin/plugin.json` por plugin. O manifesto deve ter `name`, `displayName`, `version`, `description`, `author.name` e, quando declarar `skills`, `agents` ou `mcpServers`, esses caminhos precisam existir.
-- **Codex** usa `plugins/<nome>/.codex-plugin/plugin.json` por plugin. O manifesto deve ter `name`, `version`, `description`, `author.name`, `skills` quando houver skills e um bloco `interface` com `displayName`, `shortDescription`, `developerName`, `category`, `capabilities`, `logo` e `composerIcon`.
+- **Codex** usa `plugins/<nome>/.codex-plugin/plugin.json` por plugin. O manifesto deve ter `name`, `version`, `description`, `author.name`, `skills` quando houver skills e um bloco `interface` com `displayName`, `shortDescription` (obrigatório, uma linha, até 30 caracteres), `longDescription` (obrigatório, até 4.000 caracteres), `developerName`, `category`, `capabilities`, `logo` e `composerIcon`.
 
 ## Regras de formato
 

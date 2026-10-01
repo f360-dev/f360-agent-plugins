@@ -1,7 +1,7 @@
 {
     "name": "f360-jira",
     "version": "0.0.1",
-    "description": "Skills para interação com o Jira da F360",
+    "description": "Skills para interagir com o Jira da F360.",
     "author": {
         "name": "F360",
         "email": "dev@f360.com.br"
@@ -18,7 +18,8 @@
     "skills": "./skills/",
     "interface": {
         "displayName": "F360 - Jira",
-        "shortDescription": "Skills para interação com o Jira da F360",
+        "shortDescription": "Apoio ao Jira da F360",
+        "longDescription": "Recursos para pesquisar e gerenciar itens do Jira da F360, incluindo criação, atualização, transição de status e acompanhamento de tarefas.",
         "developerName": "F360",
         "category": "Productivity",
         "capabilities": [

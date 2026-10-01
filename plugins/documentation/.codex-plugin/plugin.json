@@ -1,7 +1,7 @@
 {
     "name": "documentation",
     "version": "0.1.0",
-    "description": "Documentation-focused skills and agent for README, weekly reviews, and markdown conventions.",
+    "description": "Skills e agente para documentação, com apoio a READMEs, revisões semanais e convenções de Markdown.",
     "author": {
         "name": "Cursor Team",
         "email": "hi@cursor.com"
@@ -18,8 +18,9 @@
     ],
     "skills": "./skills/",
     "interface": {
-        "displayName": "F360 - Documentation",
-        "shortDescription": "Documentation-focused skills and agent for README, weekly reviews, and markdown conventions.",
+        "displayName": "F360 - Documentação",
+        "shortDescription": "Fluxos de documentação",
+        "longDescription": "Skills e agente para manter a documentação do projeto, incluindo atualização de READMEs, revisões semanais e convenções de Markdown.",
         "developerName": "Cursor Team",
         "category": "Productivity",
         "capabilities": [

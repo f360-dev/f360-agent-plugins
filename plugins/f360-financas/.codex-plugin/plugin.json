@@ -1,7 +1,7 @@
 {
     "name": "f360-financas",
     "version": "0.0.1",
-    "description": "Skills, Rules e Agents para o repositório f360-financas",
+    "description": "Skills, regras e agentes para o repositório f360-financas.",
     "author": {
         "name": "F360",
         "email": "dev@f360.com.br"
@@ -18,7 +18,8 @@
     "skills": "./skills/",
     "interface": {
         "displayName": "F360 Finanças",
-        "shortDescription": "Skills, Rules e Agents para o repositório f360-financas",
+        "shortDescription": "Apoio no desenvolvimento para o Finanças",
+        "longDescription": "Orientações para desenvolvedores do F360 Finanças durante o fluxo de trabalho.",
         "developerName": "F360",
         "category": "Productivity",
         "capabilities": [
