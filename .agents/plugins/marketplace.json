@@ -41,7 +41,7 @@
             "category": "Productivity"
         },
         {
-            "name": "f360-financas",
+            "name": "f360-financas-dev",
             "source": {
                 "source": "local",
                 "path": "./plugins/f360-financas"
